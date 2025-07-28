@@ -4,59 +4,47 @@
     ViewData["Title"] = "Create Post";
 }
 
-<form asp-action="AddPost" method="post" class="mb-4">
-    <input type="text" asp-for="NewBlogPost.Title" placeholder="Title"/>
-    <select asp-for="NewBlogPost.BlogId" class="form-control" asp-items="Model.Blogs"></select>
-    <textarea class="form-control mb-2" placeholder="Skriv et nyt blogindlæg..." required
-                  asp-for="NewBlogPost.Content"></textarea>
-    <h3>Dagens 1 til 10</h3>
-    <div id="rating" class="d-flex gap-2 mb-2">
-        @for (var i = 1; i <= 10; i++)
-        {
-            <div class="rating-box"
-                 data-value="@i"
-                 onclick="selectRating(@i)">
-                @i
+<link rel="stylesheet" href="css/CreatePost.css"/>
+<script src="js/CreatePost.js"></script>
+
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="mb-4 text-center text-primary">Opret nyt blogindlæg</h2>
+
+        <form asp-action="AddPost" method="post">
+            <div class="mb-3">
+                <label asp-for="NewBlogPost.Title" class="form-label">Titel</label>
+                <input type="text" asp-for="NewBlogPost.Title" class="form-control" placeholder="Indtast titel" />
             </div>
-        }
+
+            <div class="mb-3">
+                <label asp-for="NewBlogPost.BlogId" class="form-label">Vælg Blog</label>
+                <select asp-for="NewBlogPost.BlogId" class="form-select" asp-items="Model.Blogs"></select>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="NewBlogPost.Content" class="form-label">Indhold</label>
+                <textarea asp-for="NewBlogPost.Content" class="form-control" rows="5" placeholder="Skriv et nyt blogindlæg..." required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Dagens 1-10</label>
+                <div id="rating" class="d-flex gap-2 flex-wrap">
+                    @for (var i = 1; i <= 10; i++)
+                    {
+                        <div class="rating-box"
+                             data-value="@i"
+                             onclick="selectRating(@i)">
+                            @i
+                        </div>
+                    }
+                </div>
+                <input type="hidden" id="ratingInput" asp-for="NewBlogPost.OneToTen" />
+            </div>
+
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary px-4">Tilføj</button>
+            </div>
+        </form>
     </div>
-    <br/>
-    <input type="hidden" id="ratingInput" asp-for="NewBlogPost.OneToTen"/>
-    <button type="submit" class="btn btn-primary">Tilføj</button>
-</form>
-
-<style>
-    .rating-box {
-        width: 40px;
-        height: 40px;
-        text-align: center;
-        line-height: 40px;
-        border: 2px solid black;
-        cursor: pointer;
-        background-color: white;
-        font-weight: bold;
-        user-select: none;
-    }
-
-    .rating-box.selected {
-        background-color: #007bff;
-        color: white;
-        border-color: #0056b3;
-    }
-</style>
-
-<script>
-    function selectRating(value) {
-        // Fjern "selected" fra alle
-        document.querySelectorAll('.rating-box').forEach(el => el.classList.remove('selected'));
-
-        // Marker den valgte
-        const selectedBox = document.querySelector(`.rating-box[data-value="${value}"]`);
-        if (selectedBox) {
-            selectedBox.classList.add('selected');
-        }
-
-        // Sæt hidden input
-        document.getElementById('ratingInput').value = value;
-    }
-</script>
+</div>

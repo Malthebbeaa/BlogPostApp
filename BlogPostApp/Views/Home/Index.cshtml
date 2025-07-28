@@ -2,32 +2,32 @@
 @{
     ViewData["Title"] = "Min Blog";
 }
+<link rel="stylesheet" href="~/css/Index.css" />
 
-<h1 class="text-center">Blogs</h1>
+<div class="container mt-5">
 
-<form asp-action="CreatePost" method="get">
-    <button type="submit" class="btn btn-secondary" id="create-btn">Create Post</button>
-</form>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-primary">Blogindlæg i @Model.BlogPosts.First().Blog?.Title</h1>
 
-@foreach (var post in Model.BlogPosts)
-{
-    <div class="form-control" id="blog-post">
-        <h2>@post.Title</h2>
-        <h4>af @post.Author?.Name</h4>
-        <p>d. @post.Created</p>
-        <p>@post.Content</p>
-        <p>Dagens Rating: @post.OneToTen/10</p>
+        <form asp-action="CreatePost" method="get">
+            <button type="submit" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-pencil-square me-2"></i>Opret Blogindlæg
+            </button>
+        </form>
     </div>
-}
 
-<style>
-    #blog-post{
-        margin-bottom:  20px;
+    @foreach (var post in Model.BlogPosts)
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h3 class="card-title text-primary">@post.Title</h3>
+                <h6 class="card-subtitle mb-2 text-muted">af @post.Author?.Name</h6>
+                <p class="text-muted small">Oprettet d. @post.Created.ToString("dd-MM-yyyy HH:mm")</p>
+                <p class="card-text">@post.Content</p>
+                <div class="mt-3">
+                    <span class="badge bg-info text-dark">Dagens Rating: <strong>@post.OneToTen</strong>/10</span>
+                </div>
+            </div>
+        </div>
     }
-    #create-btn{
-        margin-bottom:  20px;
-        height:  100px;
-        width: 250px;
-        font-size:  24px;
-    }
-</style>
+</div>
