@@ -2,6 +2,7 @@ using System.Diagnostics;
 using BlogPostApp.Data;
 using Microsoft.AspNetCore.Mvc;
 using BlogPostApp.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogPostApp.Controllers;
@@ -19,19 +20,36 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        ViewData["Posts"] = await _context.BlogPosts.ToListAsync();
-        return View();
+        var blogs = await _context.Blogs.ToListAsync();
+        var posts = await _context.BlogPosts.Include(p => p.Author).ToListAsync();
+
+        var model = new BlogPageViewModel()
+        {
+            Blogs = new SelectList(blogs, "Id", "Title"),
+            BlogPosts = posts
+        };
+        return View(model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddPost(BlogPostDto post)
+    public async Task<IActionResult> AddPost(BlogPageViewModel model)
     {
+        var post = model.NewBlogPost;
+        var blog = await _context.Blogs.Include(b => b.Author).FirstOrDefaultAsync(b => b.Id == post.BlogId);
+
+        if (blog == null)
+        {
+            Console.WriteLine("Blog not found with id " + post.BlogId);
+            return RedirectToAction("Index");
+        }
         var newPost = new BlogPost()
         {
             Content = post.Content,
             Title = post.Title,
             Created = DateTime.Now,
-            AuthorId = post.Blog.AuthorId
+            AuthorId = blog.AuthorId,
+            BlogId = blog.Id,
+            OneToTen = post.OneToTen,
         };
         await _context.BlogPosts.AddAsync(newPost);
         await _context.SaveChangesAsync();
