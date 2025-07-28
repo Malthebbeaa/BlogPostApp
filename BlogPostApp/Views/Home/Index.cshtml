@@ -5,71 +5,29 @@
 
 <h1 class="text-center">Blogs</h1>
 
-<form asp-action="AddPost" method="post" class="mb-4">
-    <input type="text" asp-for="NewBlogPost.Title" placeholder="Title"/>
-    <select asp-for="NewBlogPost.BlogId" class="form-control" asp-items="Model.Blogs"></select>
-    <textarea class="form-control mb-2" placeholder="Skriv et nyt blogindlæg..." required asp-for="NewBlogPost.Content"></textarea>
-    <h3>Dagens 1 til 10</h3>
-    <div id="rating" class="d-flex gap-2 mb-2">
-        @for (var i = 1; i <= 10; i++)
-        {
-            <div class="rating-box"
-                 data-value="@i"
-                 onclick="selectRating(@i)">
-                @i
-            </div>
-        }
-    </div>
-    <br/>
-    <input type="hidden" id="ratingInput" asp-for="NewBlogPost.OneToTen"/>
-    <button type="submit" class="btn btn-primary">Tilføj</button>
+<form asp-action="CreatePost" method="get">
+    <button type="submit" class="btn btn-secondary" id="create-btn">Create Post</button>
 </form>
-
-
 
 @foreach (var post in Model.BlogPosts)
 {
-    <div class="form-control">
+    <div class="form-control" id="blog-post">
         <h2>@post.Title</h2>
         <h4>af @post.Author?.Name</h4>
         <p>d. @post.Created</p>
         <p>@post.Content</p>
-        <p>@post.OneToTen/10</p>
+        <p>Dagens Rating: @post.OneToTen/10</p>
     </div>
 }
 
 <style>
-    .rating-box {
-        width: 40px;
-        height: 40px;
-        text-align: center;
-        line-height: 40px;
-        border: 2px solid black;
-        cursor: pointer;
-        background-color: white;
-        font-weight: bold;
-        user-select: none;
+    #blog-post{
+        margin-bottom:  20px;
     }
-
-    .rating-box.selected {
-        background-color: #007bff;
-        color: white;
-        border-color: #0056b3;
+    #create-btn{
+        margin-bottom:  20px;
+        height:  100px;
+        width: 250px;
+        font-size:  24px;
     }
 </style>
-
-<script>
-    function selectRating(value) {
-        // Fjern "selected" fra alle
-        document.querySelectorAll('.rating-box').forEach(el => el.classList.remove('selected'));
-
-        // Marker den valgte
-        const selectedBox = document.querySelector(`.rating-box[data-value="${value}"]`);
-        if (selectedBox) {
-            selectedBox.classList.add('selected');
-        }
-
-        // Sæt hidden input
-        document.getElementById('ratingInput').value = value;
-    }
-</script>

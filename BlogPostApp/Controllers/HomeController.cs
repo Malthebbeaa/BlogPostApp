@@ -23,6 +23,7 @@ public class HomeController : Controller
         var blogs = await _context.Blogs.ToListAsync();
         var posts = await _context.BlogPosts.Include(p => p.Author).ToListAsync();
 
+        posts.Reverse();
         var model = new BlogPageViewModel()
         {
             Blogs = new SelectList(blogs, "Id", "Title"),
@@ -56,6 +57,20 @@ public class HomeController : Controller
         return RedirectToAction("Index");
     }
 
+    [HttpGet]
+    public async Task<IActionResult> CreatePost()
+    {
+        var blogs = await _context.Blogs.ToListAsync();
+        var posts = await _context.BlogPosts.Include(p => p.Author).ToListAsync();
+
+        posts.Reverse();
+        var model = new BlogPageViewModel()
+        {
+            Blogs = new SelectList(blogs, "Id", "Title"),
+            BlogPosts = posts
+        };
+        return View(model);
+    }
     public IActionResult Privacy()
     {
         return View();
