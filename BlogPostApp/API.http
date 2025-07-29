@@ -1,0 +1,22 @@
+@AuthenticationApi_HostAddress = http://localhost:5079
+
+POST {{AuthenticationApi_HostAddress}}/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Robert Fowler",
+  "password": "fowlerpass",
+  "role": "Author"
+}
+
+###
+POST {{AuthenticationApi_HostAddress}}/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Robert Fowler",
+  "password": "fowlerpass"
+}
+
