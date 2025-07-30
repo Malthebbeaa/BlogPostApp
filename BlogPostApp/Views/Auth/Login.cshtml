@@ -1,0 +1,19 @@
+@model BlogPostApp.Models.Auth.LoginDTO
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<form asp-action="Login" method="post">
+    <div>
+        <label asp-for="Name" class="form-label">Name</label>
+        <input asp-for="Name" class="form-control"/>
+    </div>
+    
+    <div>
+        <label asp-for="Password" class="form-label">Password</label>
+        <input asp-for="Password" class="form-control" type="password"/>
+    </div>
+    
+    <button type="submit">Login</button>
+</form>

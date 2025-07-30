@@ -1,0 +1,23 @@
+@model BlogPostApp.Models.Auth.RegisterDTO
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<form asp-action="Register" method="post">
+    <div>
+        <label asp-for="Name">Name</label>
+        <input asp-for="Name"/>
+    </div>
+    <div>
+        <label asp-for="Password">Password</label>
+        <input asp-for="Password"/>
+    </div>
+    
+    <div>
+        <label asp-for="Role">Role</label>
+        <input asp-for="Role"/>
+    </div>
+    
+    <button type="submit">Registrer</button>
+</form>
