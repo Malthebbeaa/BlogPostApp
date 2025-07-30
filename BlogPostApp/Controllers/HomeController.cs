@@ -74,16 +74,19 @@ public class HomeController : Controller
         };
         return View(model);
     }
+    
+    
     public IActionResult Privacy()
     {
         var secretClaims = ClaimHelper.ExtractSecretClaims(HttpContext);
 
         if (secretClaims == null)
         {
-            return View("Index");
+            return RedirectToAction("Index");
         }
         return View(secretClaims);
     }
+    
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

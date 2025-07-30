@@ -35,6 +35,13 @@ public class AuthController(IAuthService _authService): Controller
         return RedirectToAction("Index", "Home");
     }
 
+    [HttpPost("logout")]
+    public IActionResult LogOut()
+    {
+        HttpContext.Session.Remove("JWToken");
+        return RedirectToAction("Index", "Home");
+    }
+    
     [HttpGet("login")]
     public async Task<IActionResult> Login()
     {
