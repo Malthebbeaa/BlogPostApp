@@ -1,5 +1,8 @@
 using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using BlogPostApp.Data;
+using BlogPostApp.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using BlogPostApp.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -73,7 +76,13 @@ public class HomeController : Controller
     }
     public IActionResult Privacy()
     {
-        return View();
+        var secretClaims = ClaimHelper.ExtractSecretClaims(HttpContext);
+
+        if (secretClaims == null)
+        {
+            return View("Index");
+        }
+        return View(secretClaims);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
