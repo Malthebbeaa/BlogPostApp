@@ -1,0 +1,11 @@
+@model BlogPostApp.Models.BlogDTO.CreateBlogDTO
+
+@{
+    ViewData["Title"] = "CreateBlog";
+}
+
+<form method="post" asp-controller="Home" asp-action="CreateBlog">
+    <label asp-for="Title">Tile</label>
+    <input asp-for="Title"/>
+    <button type="submit">Opret Blog</button>
+</form>

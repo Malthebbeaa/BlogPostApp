@@ -39,7 +39,7 @@ namespace BlogPostApp.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Blogs");
+                    b.ToTable("Blogs", (string)null);
                 });
 
             modelBuilder.Entity("BlogPostApp.Models.BlogPost", b =>
@@ -76,7 +76,7 @@ namespace BlogPostApp.Migrations
 
                     b.HasIndex("BlogId");
 
-                    b.ToTable("BlogPosts");
+                    b.ToTable("BlogPosts", (string)null);
                 });
 
             modelBuilder.Entity("BlogPostApp.Models.User", b =>
@@ -99,7 +99,7 @@ namespace BlogPostApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("BlogPostApp.Models.Blog", b =>

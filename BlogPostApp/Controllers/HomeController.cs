@@ -5,6 +5,7 @@ using BlogPostApp.Data;
 using BlogPostApp.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using BlogPostApp.Models;
+using BlogPostApp.Models.BlogDTO;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
@@ -86,7 +87,54 @@ public class HomeController : Controller
         }
         return View(secretClaims);
     }
-    
+
+    [HttpGet]
+    public async Task<IActionResult> Blogs()
+    {
+        var blogs = await _context.Blogs.Include(b => b.Author).ToListAsync();
+        var model = new BlogOverviewModel()
+        {
+            Blogs = blogs
+        };
+        
+        return View(model);
+    }
+
+    [HttpGet]
+    public IActionResult CreateBlog()
+    {
+        var secretClaims = ClaimHelper.ExtractSecretClaims(HttpContext);
+        if (secretClaims == null || secretClaims.Role == "Reader")
+        {
+            return RedirectToAction("Index");
+        }
+        
+        return View();
+    }
+    [HttpPost]
+    public async Task<IActionResult> CreateBlog([FromForm] CreateBlogDTO request)
+    {
+        var secretClaims = ClaimHelper.ExtractSecretClaims(HttpContext);
+        var username = secretClaims!.Username;
+        
+        var author = await _context.Users.FirstOrDefaultAsync(u => u.Name == username);
+
+        if (author == null)
+        {
+            return RedirectToAction("Index");
+        }
+
+        var blog = new Blog()
+        {
+            Title = request.Title,
+            AuthorId = author.Id,
+        };
+        
+        await _context.Blogs.AddAsync(blog);
+        await _context.SaveChangesAsync();
+        
+        return RedirectToAction("Blogs");
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
