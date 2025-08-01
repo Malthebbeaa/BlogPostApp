@@ -32,14 +32,14 @@ public class AuthController(IAuthService _authService): Controller
             return View(request);
         }
         HttpContext.Session.SetString("JWToken", token);
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Blogs",  "Home");
     }
 
     [HttpPost("logout")]
     public IActionResult LogOut()
     {
         HttpContext.Session.Remove("JWToken");
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Blogs", "Home");
     }
     
     [HttpGet("login")]

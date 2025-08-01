@@ -2,19 +2,25 @@
 
 @{
     ViewData["Title"] = "Blogs";
+    var token = Context.Session.GetString("JWToken");
 }
 
 <h1>Blogs på denne side</h1>
-<form asp-action="CreateBlog" method="get">
-    <button type="submit" class="btn btn-outline-primary btn-lg">
-        <i class="bi bi-pencil-square me-2"></i>Opret Blogindlæg
-    </button>
-</form>
+@if (!string.IsNullOrEmpty(token))
+{
+    <form asp-action="CreateBlog" method="get">
+        <button type="submit" class="btn btn-outline-primary btn-lg">
+            <i class="bi bi-pencil-square me-2"></i>Opret Blog
+        </button>
+    </form>
+}
 
 @foreach (var blog in Model.Blogs)
 {
     <div>
-        <h3><a asp-action="Index">@blog.Title</a></h3>
+        <h3><a asp-action="Index" asp-controller="Home" asp-route-blogId="@blog.Id">
+            @blog.Title
+        </a></h3>
         <p>af @blog.Author?.Name</p>
     </div>
 }

@@ -1,13 +1,15 @@
 ﻿@model BlogPageViewModel
 @{
     ViewData["Title"] = "Min Blog";
+    var firstPost = Model.BlogPosts.FirstOrDefault();
+    var blogTitle = firstPost?.Blog?.Title ?? "Ukendt blog";
 }
 <link rel="stylesheet" href="~/css/Index.css" />
 
 <div class="container mt-5">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="text-primary">Blogindlæg i @Model.BlogPosts.First().Blog?.Title</h1>
+        <h1 class="text-primary">Blogindlæg i @blogTitle</h1>
 
         <form asp-action="CreatePost" method="get">
             <button type="submit" class="btn btn-outline-primary btn-lg">
@@ -25,7 +27,7 @@
                 <p class="text-muted small">Oprettet d. @post.Created.ToString("dd-MM-yyyy HH:mm")</p>
                 <p class="card-text">@post.Content</p>
                 <div class="mt-3">
-                    <span class="badge bg-info text-dark">Dagens Rating: <strong>@post.OneToTen</strong>/10</span>
+                    <span class="badge bg-info text-dark">Dagens Rating: @post.OneToTen/10</span>
                 </div>
             </div>
         </div>

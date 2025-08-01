@@ -22,17 +22,29 @@ public class HomeController : Controller
         _context = context;
     }
 
-    public async Task<IActionResult> Index()
+    [HttpGet]
+    public async Task<IActionResult> Index(Guid? blogId)
     {
         var blogs = await _context.Blogs.ToListAsync();
-        var posts = await _context.BlogPosts.Include(p => p.Author).ToListAsync();
+    
+        var posts = new List<BlogPost>();
+        if (blogId.HasValue)
+        {
+            posts = await _context.BlogPosts
+                .Where(bp => bp.BlogId == blogId.Value)
+                .Include(p => p.Author)
+                .Include(p => p.Blog)
+                .ToListAsync();
+        }
 
         posts.Reverse();
-        var model = new BlogPageViewModel()
+
+        var model = new BlogPageViewModel
         {
             Blogs = new SelectList(blogs, "Id", "Title"),
             BlogPosts = posts
         };
+
         return View(model);
     }
 
@@ -45,7 +57,7 @@ public class HomeController : Controller
         if (blog == null)
         {
             Console.WriteLine("Blog not found with id " + post.BlogId);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { blogId = post.BlogId });
         }
         var newPost = new BlogPost()
         {
@@ -58,12 +70,18 @@ public class HomeController : Controller
         };
         await _context.BlogPosts.AddAsync(newPost);
         await _context.SaveChangesAsync();
-        return RedirectToAction("Index");
+        return RedirectToAction("Index", new { blogId = blog.Id });
     }
 
     [HttpGet]
     public async Task<IActionResult> CreatePost()
     {
+        var claims = ClaimHelper.ExtractSecretClaims(HttpContext);
+
+        if (claims == null || claims.Role == "Reader")
+        {
+            return RedirectToAction("Blogs");
+        }
         var blogs = await _context.Blogs.ToListAsync();
         var posts = await _context.BlogPosts.Include(p => p.Author).ToListAsync();
 
@@ -106,7 +124,7 @@ public class HomeController : Controller
         var secretClaims = ClaimHelper.ExtractSecretClaims(HttpContext);
         if (secretClaims == null || secretClaims.Role == "Reader")
         {
-            return RedirectToAction("Index");
+            return RedirectToAction("Blogs");
         }
         
         return View();
@@ -121,7 +139,7 @@ public class HomeController : Controller
 
         if (author == null)
         {
-            return RedirectToAction("Index");
+            return RedirectToAction("Blogs");
         }
 
         var blog = new Blog()
