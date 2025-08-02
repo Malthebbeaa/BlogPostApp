@@ -5,7 +5,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Robert Fowler",
+  "name": "Martin Fowler",
   "password": "fowlerpass",
   "role": "Author"
 }
@@ -16,7 +16,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Robert Fowler",
+  "name": "Martin Fowler",
   "password": "fowlerpass"
 }
 
