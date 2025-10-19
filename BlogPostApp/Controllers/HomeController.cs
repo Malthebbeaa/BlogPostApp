@@ -73,7 +73,7 @@ public class HomeController : Controller
         return RedirectToAction("Index", new { blogId = blog.Id });
     }
 
-    [HttpGet]
+    [HttpPost]
     public async Task<IActionResult> CreatePost()
     {
         var claims = ClaimHelper.ExtractSecretClaims(HttpContext);
